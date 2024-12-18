@@ -1,11 +1,14 @@
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
-const expiresIn = "3d"; // 3 gün
+dotenv.config();
+
+const maxAge = 3 * 24 * 60 * 60 * 1000; // 3 gün
 const secretKey = process.env.JWT_SECRET_KEY;
 
 const createToken = (email, userId) => {
-  return jwt.sign({ email, id: userId }, secretKey, { expiresIn });
+  return jwt.sign({ email, id: userId }, secretKey, { expiresIn: maxAge });
 };
 
 export const signup = async (request, response, next) => {
@@ -15,10 +18,12 @@ export const signup = async (request, response, next) => {
       return response.status(400).send("Email and password are required");
     }
     const user = await User.create({ email, password });
-    const token = createToken(email, user._id);
+    const token = createToken(user.email, user._id);
+    console.log(token);
+    console.log("token: ", token);
     response.cookie("token", token, {
-      maxAge: expiresIn,
-      secure: true,
+      maxAge,
+      secure: false,
       samSite: "none",
     });
     response.status(201).json({
@@ -29,6 +34,6 @@ export const signup = async (request, response, next) => {
       },
     });
   } catch (error) {
-    response.status(500).send("Internal Server Error: ", error);
+    response.status(500).send("Internal Server Error");
   }
 };
