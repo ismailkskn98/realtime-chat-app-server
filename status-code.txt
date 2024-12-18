@@ -1,0 +1,32 @@
+1. 200 - OK
+Anlamı: İstek başarıyla tamamlandı. Örneğin, bir kullanıcı veya ürün bilgileri alındı veya güncellendi.
+Kullanım: Veriyi doğru bir şekilde aldığınızda veya güncellediğinizde 200 OK durumu döner. Örneğin, bir kullanıcı bilgilerini güncellediğinizde veya bir ürün listesi döndürdüğünüzde bu durumu alabilirsiniz.
+2. 201 - Created
+Anlamı: Yeni bir kaynak başarıyla oluşturuldu. Genellikle bir kayıt işlemi sonrası döner.
+Kullanım: Yeni bir kullanıcı oluşturduğunuzda veya bir ürün eklediğinizde bu durumu döndürebilirsiniz. Örneğin, /users endpoint'inde bir POST isteği ile yeni bir kullanıcı oluşturduğunuzda 201 Created döner.
+3. 204 - No Content
+Anlamı: İstekte bulunan kaynaktan herhangi bir içerik dönülmez, ancak işlem başarılı bir şekilde gerçekleştirildi.
+Kullanım: Örneğin, bir kullanıcı silindiğinde veya başarıyla güncellendiğinde bu durumu döndürebilirsiniz. Özellikle sadece silme işlemi gerçekleştiriliyorsa kullanılır.
+4. 400 - Bad Request
+Anlamı: İstek geçersiz veya hatalıdır. Örneğin, gereksinimler sağlanmamış olabilir veya parametreler doğru formatta değildir.
+Kullanım: Kullanıcı adı gibi gereksinimlerin yerine getirilmediği durumlarda bu durumu döndürebilirsiniz. Örneğin, /users endpoint'inde gereksiz bir parametre sağladığınızda 400 Bad Request döner.
+5. 401 - Unauthorized
+Anlamı: Kimlik doğrulama bilgileri sağlanmadı veya hatalıdır.
+Kullanım: Kullanıcının erişim izni yoksa veya yanlış şifre sağlandığında bu durumu döndürebilirsiniz.
+6. 403 - Forbidden
+Anlamı: Kullanıcı, istek yaptığı kaynağa erişim iznine sahip değildir.
+Kullanım: Örneğin, bir kullanıcının belirli bir kaynağa erişme yetkisi olmadığında bu durumu döndürebilirsiniz.
+7. 404 - Not Found
+Anlamı: İstenen kaynak bulunamadı.
+Kullanım: Örneğin, /products/123 endpoint'inde aradığınız ürün ID mevcut değilse bu durumu döndürebilirsiniz.
+8. 409 - Conflict
+Anlamı: İstek, mevcut bir kaynakla çakışıyor.
+Kullanım: Örneğin, aynı kullanıcı adıyla tekrar kayıt olmaya çalışıldığında bu durumu döndürebilirsiniz.
+9. 500 - Internal Server Error
+Anlamı: Sunucu tarafında beklenmeyen bir hata oluştu.
+Kullanım: Sunucuda yaşanan bir sorun durumunda bu durumu döndürebilirsiniz. Örneğin, veritabanı erişiminde bir problem yaşandığında bu durumu döndürebilirsiniz.
+Örnek Kullanımlar
+Yeni Kullanıcı Oluşturma: POST /users ile yeni bir kullanıcı oluşturduğunuzda, eğer başarıyla oluşturulduysa 201 Created dönebiliriz.
+Kullanıcı veya Ürün Bulunamadı: GET /users/123 veya GET /products/456 gibi isteklerde, aradığınız kaynak bulunmadığında 404 Not Found dönebilirsiniz.
+Ürün veya Kullanıcı Eşleşmedi: Eğer sorguladığınız bir kullanıcı adı veya ürün mevcut değilse 404 Not Found dönebilirsiniz.
+Silme: DELETE /users/123 gibi bir istekle bir kullanıcıyı sildiğinizde, eğer başarılı ise 204 No Content dönebiliriz.
