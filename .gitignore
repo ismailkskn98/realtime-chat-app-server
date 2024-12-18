@@ -1,0 +1,23 @@
+# Node.js Bağımlılıkları
+node_modules/
+
+# Çevresel Değişkenler
+.env
+.env.local
+.env.*
+
+# Log Dosyaları
+*.log
+
+# Derleme Çıktıları
+build/
+dist/
+
+# OS ve IDE Dosyaları
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Git Tarafından Üretilen Dosyalar
+*.lock
