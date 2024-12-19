@@ -53,7 +53,6 @@ export const login = async (request, response, next) => {
       return response.status(401).send("Email or password is wrong");
     }
     const token = createToken(user.email, user._id);
-    console.log("token: ", token);
     response.cookie("token", token, {
       maxAge,
       secure: false,
@@ -72,5 +71,34 @@ export const login = async (request, response, next) => {
     });
   } catch (error) {
     response.status(500).send("Internal Server Error");
+  }
+};
+
+export const getUserInfo = async (request, response) => {
+  if (!request.user) {
+    return response.status(401).json({ error: "Unauthorized request" });
+  }
+
+  const id = request.user.id;
+  try {
+    const user = await User.findById(id).select("_id email firstName lastName image color profileSetup");
+    if (!user) {
+      return response.status(404).json({ error: "User not found" });
+    }
+
+    response.status(200).json({
+      user: {
+        id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        image: user.image,
+        color: user.color,
+        profileSetup: user.profileSetup,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Internal Server Error" });
   }
 };
