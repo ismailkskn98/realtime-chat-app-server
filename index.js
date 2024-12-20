@@ -15,7 +15,7 @@ const origin = process.env.ORIGIN;
 app.use(
   cors({
     origin: [origin, "http://192.168.1.110:5173"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
 );

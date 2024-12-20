@@ -102,3 +102,48 @@ export const getUserInfo = async (request, response) => {
     response.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+export const updateProfile = async (request, response) => {
+  if (!request.user) {
+    return response.status(401).json({ error: "Unauthorized request" });
+  }
+  try {
+    const id = request.user.id;
+    const { firstName, lastName, color } = request.body;
+
+    if (!firstName || !lastName || !color) {
+      return response.status(400).json({ error: "First name, last name, and color are required" });
+    }
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      {
+        firstName,
+        lastName,
+        color,
+        profileSetup: true,
+      },
+      // new: true güncellenmiş veriyi döndürür
+      // runValidators: true güncelleme işlemi sırasında şema doğrulamalarını çalıştırır
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return response.status(404).json({ error: "User not found" });
+    }
+
+    response.status(200).json({
+      user: {
+        id: updatedUser._id,
+        email: updatedUser.email,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        image: updatedUser.image,
+        color: updatedUser.color,
+        profileSetup: updatedUser.profileSetup,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Internal Server Error" });
+  }
+};

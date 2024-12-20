@@ -6,7 +6,6 @@ export const verifyToken = (request, response, next) => {
     if (!token) {
       return response.status(401).json({ error: "Authentication token not found" });
     }
-
     jwt.verify(token, process.env.JWT_SECRET_KEY, async (error, user) => {
       if (error) {
         return response.status(401).json({ error: "Invalid or expired token" });
