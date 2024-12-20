@@ -23,6 +23,10 @@ const userSchema = new Schema({
     type: String,
     required: false,
   },
+  objectImage: {
+    type: Boolean,
+    required: false,
+  },
   color: {
     type: Number,
     required: false,

@@ -2,6 +2,9 @@ import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { compare } from "bcrypt";
+import fs from "fs";
+import path from "path";
+import { __dirname } from "../utils/dirnameAndPathname.js";
 
 dotenv.config();
 
@@ -65,6 +68,7 @@ export const login = async (request, response, next) => {
         firstName: user.firstName,
         lastName: user.lastName,
         image: user.image,
+        objectImage: user.objectImage,
         color: user.color,
         profileSetup: user.profileSetup,
       },
@@ -81,11 +85,11 @@ export const getUserInfo = async (request, response) => {
 
   const id = request.user.id;
   try {
-    const user = await User.findById(id).select("_id email firstName lastName image color profileSetup");
+    const user = await User.findById(id).select("_id email firstName lastName image objectImage color profileSetup");
     if (!user) {
       return response.status(404).json({ error: "User not found" });
     }
-
+    console.log(user);
     response.status(200).json({
       user: {
         id: user._id,
@@ -93,6 +97,7 @@ export const getUserInfo = async (request, response) => {
         firstName: user.firstName,
         lastName: user.lastName,
         image: user.image,
+        objectImage: user.objectImage,
         color: user.color,
         profileSetup: user.profileSetup,
       },
@@ -109,10 +114,10 @@ export const updateProfile = async (request, response) => {
   }
   try {
     const id = request.user.id;
-    const { firstName, lastName, color } = request.body;
+    const { firstName, lastName, color, objectImage } = request.body;
 
-    if (!firstName || !lastName || !color) {
-      return response.status(400).json({ error: "First name, last name, and color are required" });
+    if (!firstName || !lastName) {
+      return response.status(400).json({ error: "First name and last name are required" });
     }
     const updatedUser = await User.findByIdAndUpdate(
       id,
@@ -120,6 +125,7 @@ export const updateProfile = async (request, response) => {
         firstName,
         lastName,
         color,
+        objectImage,
         profileSetup: true,
       },
       // new: true güncellenmiş veriyi döndürür
@@ -138,10 +144,67 @@ export const updateProfile = async (request, response) => {
         firstName: updatedUser.firstName,
         lastName: updatedUser.lastName,
         image: updatedUser.image,
+        objectImage: updatedUser.objectImage,
         color: updatedUser.color,
         profileSetup: updatedUser.profileSetup,
       },
     });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const addProfileImage = async (request, response) => {
+  /*
+    request.file:  {
+    fieldname: 'profile-image',
+    originalname: '20230331_174935.jpg',
+    encoding: '7bit',
+    mimetype: 'image/jpeg',
+    destination: 'C:\\Users\\keskin\\Desktop\\realtime-chat-app\\realtime-chat-app-server\\public\\uploads\\profiles',
+    filename: '20230331_174935-1734714413507-812064118.jpg',
+    path: 'C:\\Users\\keskin\\Desktop\\realtime-chat-app\\realtime-chat-app-server\\public\\uploads\\profiles\\20230331_174935-1734714413507-812064118.jpg',
+    size: 1431368
+    }
+  */
+  if (!request.user) {
+    return response.status(401).json({ error: "Unauthorized request" });
+  }
+  try {
+    const id = request.user.id;
+    const user = await User.findById(id);
+    if (!user || !request.file) {
+      return response.status(404).json({ error: "User or image not found" });
+    }
+    // public/uploads/profiles/WhatsApp Image 2024-06-01 at 18.37.13-1734722512777-737077278.jpeg
+    const image = "static/uploads/profiles/" + request.file.filename;
+    const updatedUser = await User.findByIdAndUpdate(id, { image });
+    response.status(200).json({ image: updatedUser.image });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const removeProfileImage = async (request, response) => {
+  if (!request.user) {
+    return response.status(401).json({ error: "Unauthorized request" });
+  }
+  try {
+    const id = request.user.id;
+    const user = await User.findById(id);
+
+    if (!user || !user.image) {
+      return response.status(404).json({ error: "User or image not found" });
+    }
+
+    const filePath = path.join(__dirname, "..", user.image);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath); // Dosyayı sil
+    }
+    const updatedUser = await User.findByIdAndUpdate(id, { image: "" }, { new: true, runValidators: true });
+    response.status(200).json({ user: { ...updatedUser } });
   } catch (error) {
     console.error(error);
     response.status(500).json({ error: "Internal Server Error" });

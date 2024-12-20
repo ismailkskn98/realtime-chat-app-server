@@ -4,6 +4,8 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import authRouter from "./routes/authRoutes.js";
+import path from "path";
+import { __dirname } from "./utils/dirnameAndPathname.js";
 
 dotenv.config();
 
@@ -14,11 +16,13 @@ const origin = process.env.ORIGIN;
 
 app.use(
   cors({
-    origin: [origin, "http://192.168.1.110:5173"],
+    origin: [origin, "http://192.168.1.110:5173", "http://192.168.1.103"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
 );
+
+app.use("/static", express.static(path.join(__dirname, "../public")));
 app.use(cookieParser());
 app.use(express.json());
 
