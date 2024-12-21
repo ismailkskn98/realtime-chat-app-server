@@ -23,7 +23,6 @@ export const signup = async (request, response, next) => {
     }
     const user = await User.create({ email, password });
     const token = createToken(user.email, user._id);
-    console.log("token: ", token);
     response.cookie("token", token, {
       maxAge,
       secure: false,
@@ -89,7 +88,6 @@ export const getUserInfo = async (request, response) => {
     if (!user) {
       return response.status(404).json({ error: "User not found" });
     }
-    console.log(user);
     response.status(200).json({
       user: {
         id: user._id,
@@ -194,7 +192,6 @@ export const removeProfileImage = async (request, response) => {
   try {
     const id = request.user.id;
     const user = await User.findById(id);
-
     if (!user || !user.image) {
       return response.status(404).json({ error: "User or image not found" });
     }

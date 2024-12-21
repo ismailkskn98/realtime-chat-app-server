@@ -10,6 +10,6 @@ authRouter.post("/login", login);
 authRouter.get("/user-info", verifyToken, getUserInfo);
 authRouter.patch("/update-profile", verifyToken, updateProfile);
 authRouter.patch("/add-profile-image", verifyToken, upload.single("profile-image"), addProfileImage);
-authRouter.delete("/delete-profile-image", verifyToken, removeProfileImage);
+authRouter.delete("/remove-profile-image", verifyToken, removeProfileImage);
 
 export default authRouter;
