@@ -176,7 +176,7 @@ export const addProfileImage = async (request, response) => {
       return response.status(404).json({ error: "User or image not found" });
     }
     // public/uploads/profiles/WhatsApp Image 2024-06-01 at 18.37.13-1734722512777-737077278.jpeg
-    const image = "static/uploads/profiles/" + request.file.filename;
+    const image = "uploads/profiles/" + request.file.filename;
     const updatedUser = await User.findByIdAndUpdate(id, { image });
     response.status(200).json({ image: updatedUser.image });
   } catch (error) {
@@ -196,7 +196,7 @@ export const removeProfileImage = async (request, response) => {
       return response.status(404).json({ error: "User or image not found" });
     }
 
-    const filePath = path.join(__dirname, "..", user.image);
+    const filePath = path.join(__dirname, "..", "public", user.image);
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath); // Dosyayı sil
     }
