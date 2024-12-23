@@ -16,7 +16,7 @@ const origin = process.env.ORIGIN;
 
 app.use(
   cors({
-    origin: [origin, "http://192.168.1.110:5173", "http://192.168.1.103"],
+    origin: [origin, "http://192.168.1.110:5173", "http://192.168.1.103", "https://realtime-chat-app-client-xi.vercel.app"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
