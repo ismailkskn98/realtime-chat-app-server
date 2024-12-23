@@ -196,7 +196,7 @@ export const removeProfileImage = async (request, response) => {
       return response.status(404).json({ error: "User or image not found" });
     }
 
-    const filePath = path.join(__dirname, "..", "public", user.image);
+    const filePath = path.join(__dirname, "public", user.image);
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath); // Dosyayı sil
     }
