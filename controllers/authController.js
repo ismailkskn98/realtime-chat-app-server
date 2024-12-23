@@ -25,7 +25,8 @@ export const signup = async (request, response, next) => {
     const token = createToken(user.email, user._id);
     response.cookie("token", token, {
       maxAge,
-      secure: false,
+      httpOnly: true,
+      secure: true,
       samSite: "none",
     });
     response.status(201).json({
